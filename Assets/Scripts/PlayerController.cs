@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour 
 {
@@ -9,9 +10,25 @@ public class PlayerController : MonoBehaviour
 
     public Rigidbody2D rb;
     public Animator animator;
-
     Vector2 movement;
+    Scene scene;
 
+
+    void Start()
+    {
+        scene = SceneManager.GetActiveScene();
+        if (scene.name == "Game")
+        {
+            Debug.Log("Starting " + scene.name + " at " + StaticVars.mainLocation);
+            //RigidbodyInterpolation2D interpolation = rb.interpolation;
+            //rb.interpolation = RigidbodyInterpolation2D.None;
+            //rb.gameObject.SetActive(false);
+            rb.position = StaticVars.mainLocation;
+            //rb.gameObject.transform.position = StaticVars.mainLocation;
+            //rb.gameObject.SetActive(true);
+            //rb.interpolation = interpolation;
+        }
+    }
     void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -32,5 +49,11 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        if (scene.name == "Game")
+        {
+            StaticVars.mainLocation = rb.position;
+        }
+
     }
+
 }
